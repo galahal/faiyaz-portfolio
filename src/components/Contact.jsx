@@ -75,6 +75,12 @@ export default function Contact() {
     },
   ];
 
+  const researchProfiles = [
+    { label: "ResearchGate", href: "#" },
+    { label: "ORCiD",        href: "#" },
+    { label: "ACM DL",       href: "https://doi.org/10.1145/3772318.3791250" },
+  ];
+
   return (
     <div className="min-h-screen pt-28 pb-20 px-6">
       <div className="max-w-5xl mx-auto">
@@ -93,13 +99,15 @@ export default function Contact() {
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
 
-          {/* ── Contact Info ── */}
+          {/* Contact Info */}
           <div className="lg:col-span-2 flex flex-col gap-4">
             {contactInfo.map((c, i) => (
-              <div key={i}
+              <div
+                key={i}
                 className="flex items-start gap-4 p-4 rounded-2xl border border-gray-200 dark:border-white/10
                            bg-gray-50/50 dark:bg-white/5 hover:border-purple-500/40
-                           hover:bg-purple-500/5 transition-all duration-200">
+                           hover:bg-purple-500/5 transition-all duration-200"
+              >
                 <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center
                                 text-purple-500 flex-shrink-0">
                   {c.icon}
@@ -109,10 +117,13 @@ export default function Contact() {
                     {c.label}
                   </p>
                   {c.href ? (
-                    <a href={c.href} target={c.href.startsWith("http") ? "_blank" : undefined}
+                    <a
+                      href={c.href}
+                      target={c.href.startsWith("http") ? "_blank" : undefined}
                       rel="noopener noreferrer"
                       className="text-sm font-medium text-gray-800 dark:text-gray-200
-                                 hover:text-purple-500 dark:hover:text-purple-400 transition-colors break-all">
+                                 hover:text-purple-500 dark:hover:text-purple-400 transition-colors break-all"
+                    >
                       {c.value}
                     </a>
                   ) : (
@@ -122,21 +133,22 @@ export default function Contact() {
               </div>
             ))}
 
-            {/* Research profiles */}
+            {/* Research Profiles */}
             <div className="p-4 rounded-2xl border border-gray-200 dark:border-white/10
                             bg-gray-50/50 dark:bg-white/5">
               <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">
                 Research Profiles
               </p>
               <div className="flex flex-col gap-2">
-                {[
-                  { label: "ResearchGate", href: "#" },
-                  { label: "ORCiD", href: "#" },
-                  { label: "ACM DL", href: "https://doi.org/10.1145/3772318.3791250" },
-                ].map((p) => (
-                  <a key={p.label} href={p.href} target="_blank" rel="noopener noreferrer"
+                {researchProfiles.map((p) => (
+                  <a
+                    key={p.label}
+                    href={p.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400
-                               hover:text-purple-500 transition-colors">
+                               hover:text-purple-500 transition-colors"
+                  >
                     {p.label}
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -148,7 +160,7 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* ── Contact Form ── */}
+          {/* Contact Form */}
           <div className="lg:col-span-3">
             <div className="p-6 md:p-8 rounded-2xl border border-gray-200 dark:border-white/10
                             bg-gray-50/50 dark:bg-white/5">
@@ -161,18 +173,13 @@ export default function Contact() {
                       Name
                     </label>
                     <input
-                      name="name"
-                      value={form.name}
-                      onChange={handleChange}
-                      required
+                      name="name" value={form.name} onChange={handleChange} required
                       placeholder="Your name"
                       className="w-full px-4 py-2.5 rounded-xl text-sm
                                  border border-gray-200 dark:border-white/10
-                                 bg-white dark:bg-white/5
-                                 text-gray-900 dark:text-white
+                                 bg-white dark:bg-white/5 text-gray-900 dark:text-white
                                  placeholder-gray-400 dark:placeholder-gray-500
-                                 focus:outline-none focus:border-purple-500 dark:focus:border-purple-400
-                                 transition-colors"
+                                 focus:outline-none focus:border-purple-500 dark:focus:border-purple-400 transition-colors"
                     />
                   </div>
                   <div>
@@ -180,19 +187,13 @@ export default function Contact() {
                       Email
                     </label>
                     <input
-                      name="email"
-                      type="email"
-                      value={form.email}
-                      onChange={handleChange}
-                      required
+                      name="email" type="email" value={form.email} onChange={handleChange} required
                       placeholder="your@email.com"
                       className="w-full px-4 py-2.5 rounded-xl text-sm
                                  border border-gray-200 dark:border-white/10
-                                 bg-white dark:bg-white/5
-                                 text-gray-900 dark:text-white
+                                 bg-white dark:bg-white/5 text-gray-900 dark:text-white
                                  placeholder-gray-400 dark:placeholder-gray-500
-                                 focus:outline-none focus:border-purple-500 dark:focus:border-purple-400
-                                 transition-colors"
+                                 focus:outline-none focus:border-purple-500 dark:focus:border-purple-400 transition-colors"
                     />
                   </div>
                 </div>
@@ -202,18 +203,13 @@ export default function Contact() {
                     Subject
                   </label>
                   <input
-                    name="subject"
-                    value={form.subject}
-                    onChange={handleChange}
-                    required
+                    name="subject" value={form.subject} onChange={handleChange} required
                     placeholder="What's this about?"
                     className="w-full px-4 py-2.5 rounded-xl text-sm
                                border border-gray-200 dark:border-white/10
-                               bg-white dark:bg-white/5
-                               text-gray-900 dark:text-white
+                               bg-white dark:bg-white/5 text-gray-900 dark:text-white
                                placeholder-gray-400 dark:placeholder-gray-500
-                               focus:outline-none focus:border-purple-500 dark:focus:border-purple-400
-                               transition-colors"
+                               focus:outline-none focus:border-purple-500 dark:focus:border-purple-400 transition-colors"
                   />
                 </div>
 
@@ -222,23 +218,16 @@ export default function Contact() {
                     Message
                   </label>
                   <textarea
-                    name="message"
-                    value={form.message}
-                    onChange={handleChange}
-                    required
-                    rows={5}
+                    name="message" value={form.message} onChange={handleChange} required rows={5}
                     placeholder="Tell me about your project, research collaboration, or just say hi!"
                     className="w-full px-4 py-2.5 rounded-xl text-sm resize-none
                                border border-gray-200 dark:border-white/10
-                               bg-white dark:bg-white/5
-                               text-gray-900 dark:text-white
+                               bg-white dark:bg-white/5 text-gray-900 dark:text-white
                                placeholder-gray-400 dark:placeholder-gray-500
-                               focus:outline-none focus:border-purple-500 dark:focus:border-purple-400
-                               transition-colors"
+                               focus:outline-none focus:border-purple-500 dark:focus:border-purple-400 transition-colors"
                   />
                 </div>
 
-                {/* Status messages */}
                 {status === "success" && (
                   <div className="p-3 rounded-xl bg-green-500/10 border border-green-500/30 text-green-500 text-sm">
                     ✓ Message sent! I'll get back to you soon.
@@ -246,7 +235,7 @@ export default function Contact() {
                 )}
                 {status === "error" && (
                   <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-500 text-sm">
-                    Something went wrong. Try emailing me directly at faiyaz.mkhan.research@gmail.com
+                    Something went wrong. Email me directly at faiyaz.mkhan.research@gmail.com
                   </div>
                 )}
 
@@ -263,16 +252,14 @@ export default function Contact() {
                     <>
                       <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                       </svg>
                       Sending...
                     </>
                   ) : (
                     <>
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                          d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                       </svg>
                       Send Message
                     </>

@@ -42,15 +42,11 @@ export default function Navbar({ dark, setDark }) {
           }
         `}
       >
-        {/* Name */}
-        <Link
-          to="/"
-          className="text-sm font-bold tracking-wide text-gray-900 dark:text-white
-                     hover:text-purple-500 dark:hover:text-purple-400 transition-colors mr-1"
-        >
-        <h1 className="font-bold text-xl text-black dark:text-white">
-          Faiyaz<span className="text-purple-500">.</span>
-        </h1>
+       {/* Name — Faiyaz. style */}
+        <Link to="/" className="mr-1">
+          <h1 className="font-bold text-xl text-black dark:text-white hover:opacity-80 transition-opacity">
+            Faiyaz<span className="text-purple-500">.</span>
+          </h1>
         </Link>
 
         {/* Divider */}
