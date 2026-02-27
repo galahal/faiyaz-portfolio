@@ -80,6 +80,7 @@ export default function Stats() {
   const [error, setError]           = useState("");
   const [activeTab, setActiveTab]   = useState("overview");
   const [visitorPage, setVisitorPage] = useState(1);
+  const [uniqueOnly, setUniqueOnly] = useState(false);
   const [contactPage, setContactPage] = useState(1);
   const [expandedMsg, setExpandedMsg] = useState(null);
   const PER_PAGE = 20;
@@ -177,10 +178,24 @@ export default function Stats() {
 
   const { visitors, contacts } = data;
   const vLogs  = visitors.logs;
+
+  // Filter unique IPs if checkbox enabled
+  const filteredVLogs = uniqueOnly
+    ? Object.values(
+        vLogs.reduce((acc, log) => {
+          if (!acc[log.ip]) acc[log.ip] = log; // keep first occurrence
+          return acc;
+        }, {})
+      )
+    : vLogs;
+
   const cLogs  = contacts.logs;
-  const vPages = Math.ceil(vLogs.length / PER_PAGE);
+  const vPages = Math.ceil(filteredVLogs.length / PER_PAGE);
   const cPages = Math.ceil(cLogs.length / PER_PAGE);
-  const vSlice = vLogs.slice((visitorPage - 1) * PER_PAGE, visitorPage * PER_PAGE);
+  const vSlice = filteredVLogs.slice(
+    (visitorPage - 1) * PER_PAGE,
+    visitorPage * PER_PAGE
+  );
   const cSlice = cLogs.slice((contactPage - 1) * PER_PAGE, contactPage * PER_PAGE);
 
   const tabs = ["overview", "visitors", "contacts"];
@@ -297,9 +312,24 @@ export default function Stats() {
         {/* ── VISITORS TAB ── */}
         {activeTab === "visitors" && (
           <div>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-              {visitors.total} total visits · {visitors.uniqueIPs} unique IPs
-            </p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                {visitors.total} total visits · {visitors.uniqueIPs} unique IPs
+              </p>
+
+              <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={uniqueOnly}
+                  onChange={(e) => {
+                    setUniqueOnly(e.target.checked);
+                    setVisitorPage(1); // reset pagination when toggled
+                  }}
+                  className="accent-purple-600"
+                />
+                Show unique IPs only
+              </label>
+            </div>
             <div className="rounded-2xl border border-gray-200 dark:border-white/10 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
