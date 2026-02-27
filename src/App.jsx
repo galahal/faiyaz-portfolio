@@ -6,6 +6,7 @@ import About from "./components/About";
 import Projects from "./components/Projects";
 import Blogs from "./components/Blogs";
 import Contact from "./components/Contact";
+import Stats from "./components/Stats";
 import useTracker from "./hooks/useTracker";
 
 export default function App({ dark, setDark }) {
@@ -23,6 +24,7 @@ export default function App({ dark, setDark }) {
             <Route path="/projects" element={<Projects />} />
             <Route path="/blogs"    element={<Blogs />} />
             <Route path="/contact"  element={<Contact />} />
+            <Route path="/stats"    element={<Stats />} />
           </Routes>
         </main>
         <Footer />
