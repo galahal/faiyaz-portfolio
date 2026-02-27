@@ -4,11 +4,11 @@ import profile from "../assets/profile.jpg";
 import TechMarquee from "./TechMarquee";
 
 const roles = [
-  "Full Stack Engineer",
   "HCI Researcher",
   "ICT4D Researcher",
-  "React Developer",
-  "MERN Stack Dev",
+  "Software Engineer",
+  "Computer Enthusiast",
+  "Full Stack Developer",
 ];
 
 const featuredProjects = [
@@ -115,8 +115,8 @@ export default function Hero() {
               Available for work
             </div>
 
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight">
-              Hi, I'm <span className="text-purple-500">Faiyaz</span>
+            <h1 className="text-5xl md:text-6xl lg:text-6xl font-bold leading-tight tracking-tight">
+              Hi, I'm <span className="text-purple-500">Faiyaz Morshed Khan</span>
             </h1>
 
             <div className="mt-3 h-10 flex items-center md:justify-start justify-center">
@@ -127,8 +127,8 @@ export default function Hero() {
             </div>
 
             <p className="mt-5 text-base md:text-lg text-gray-500 dark:text-gray-400 max-w-xl leading-relaxed">
-              Full Stack Engineer & HCI Researcher at BRAC University. I build scalable web
-              applications and research how digital systems can be more inclusive for everyone.
+              I am Faiyaz Morshed Khan, a Full Stack Engineer and HCI researcher at BRAC University. 
+              I build scalable MERN stack applications and research inclusive digital systems.
             </p>
 
             {/* CHI Paper */}
@@ -200,7 +200,7 @@ export default function Hero() {
                             blur-2xl opacity-30 scale-110 pointer-events-none" />
             <div className="absolute inset-0 rounded-full border-2 border-dashed border-purple-500/40
                             animate-spin-slow pointer-events-none" />
-            <img src={profile} alt="Faiyaz"
+            <img src={profile} alt="Faiyaz Morshed Khan"
               className="relative w-64 h-64 md:w-80 md:h-80 object-cover rounded-full
                          grayscale hover:grayscale-0 transition-all duration-700
                          border-4 border-purple-500/60 shadow-2xl shadow-purple-500/20" />
@@ -218,6 +218,10 @@ export default function Hero() {
             </div>
           </div>
         </div>
+
+        <p className="sr-only">
+          Faiyaz Morshed Khan portfolio website, MERN stack developer from Bangladesh.
+        </p>
 
         {/* Marquee */}
         <div className="max-w-6xl w-full">
@@ -251,9 +255,9 @@ export default function Hero() {
           {/* Stats */}
           <div className="grid grid-cols-2 gap-4 flex-shrink-0 w-full md:w-72">
             {[
-              { label: "Published Paper",  value: "CHI '26", icon: "📄" },
-              { label: "Projects Built",   value: "6+",      icon: "🔨" },
-              { label: "Years Experience", value: "2+",      icon: "💼" },
+              { label: "Recetly Published",  value: "CHI '26", icon: "📄" },
+              { label: "Projects Built",   value: "10+",      icon: "🔨" },
+              { label: "Papers Published", value: "2+",      icon: "💼" },
               { label: "CGPA",             value: "3.53",    icon: "🎓" },
             ].map((s) => (
               <div key={s.label}
