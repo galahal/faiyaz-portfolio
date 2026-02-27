@@ -1,11 +1,24 @@
 import { useState } from "react";
 
 export default function Contact() {
-  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+    anonymous: false,
+  });
   const [status, setStatus] = useState(null); // null | "sending" | "success" | "error"
 
-  const handleChange = (e) =>
-    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setForm((f) => ({
+      ...f,
+      [name]: type === "checkbox" ? checked : value,
+      // Clear email when switching to anonymous
+      ...(name === "anonymous" && checked ? { email: "" } : {}),
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,16 +29,25 @@ export default function Contact() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
+      const data = await res.json();
       if (res.ok) {
         setStatus("success");
-        setForm({ name: "", email: "", subject: "", message: "" });
+        setForm({ name: "", email: "", subject: "", message: "", anonymous: false });
       } else {
         setStatus("error");
+        console.error(data.error);
       }
     } catch {
       setStatus("error");
     }
   };
+
+  const inputClass = `w-full px-4 py-2.5 rounded-xl text-sm
+    border border-gray-200 dark:border-white/10
+    bg-white dark:bg-white/5 text-gray-900 dark:text-white
+    placeholder-gray-400 dark:placeholder-gray-500
+    focus:outline-none focus:border-purple-500 dark:focus:border-purple-400
+    transition-colors`;
 
   const contactInfo = [
     {
@@ -102,12 +124,10 @@ export default function Contact() {
           {/* Contact Info */}
           <div className="lg:col-span-2 flex flex-col gap-4">
             {contactInfo.map((c, i) => (
-              <div
-                key={i}
+              <div key={i}
                 className="flex items-start gap-4 p-4 rounded-2xl border border-gray-200 dark:border-white/10
                            bg-gray-50/50 dark:bg-white/5 hover:border-purple-500/40
-                           hover:bg-purple-500/5 transition-all duration-200"
-              >
+                           hover:bg-purple-500/5 transition-all duration-200">
                 <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center
                                 text-purple-500 flex-shrink-0">
                   {c.icon}
@@ -117,13 +137,11 @@ export default function Contact() {
                     {c.label}
                   </p>
                   {c.href ? (
-                    <a
-                      href={c.href}
+                    <a href={c.href}
                       target={c.href.startsWith("http") ? "_blank" : undefined}
                       rel="noopener noreferrer"
                       className="text-sm font-medium text-gray-800 dark:text-gray-200
-                                 hover:text-purple-500 dark:hover:text-purple-400 transition-colors break-all"
-                    >
+                                 hover:text-purple-500 dark:hover:text-purple-400 transition-colors break-all">
                       {c.value}
                     </a>
                   ) : (
@@ -141,14 +159,9 @@ export default function Contact() {
               </p>
               <div className="flex flex-col gap-2">
                 {researchProfiles.map((p) => (
-                  <a
-                    key={p.label}
-                    href={p.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <a key={p.label} href={p.href} target="_blank" rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400
-                               hover:text-purple-500 transition-colors"
-                  >
+                               hover:text-purple-500 transition-colors">
                     {p.label}
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -167,6 +180,8 @@ export default function Contact() {
               <h2 className="text-lg font-bold mb-6 text-gray-900 dark:text-white">Send a Message</h2>
 
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+
+                {/* Name + Email row */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="text-xs font-semibold uppercase tracking-widest text-gray-400 block mb-1.5">
@@ -175,29 +190,29 @@ export default function Contact() {
                     <input
                       name="name" value={form.name} onChange={handleChange} required
                       placeholder="Your name"
-                      className="w-full px-4 py-2.5 rounded-xl text-sm
-                                 border border-gray-200 dark:border-white/10
-                                 bg-white dark:bg-white/5 text-gray-900 dark:text-white
-                                 placeholder-gray-400 dark:placeholder-gray-500
-                                 focus:outline-none focus:border-purple-500 dark:focus:border-purple-400 transition-colors"
+                      className={inputClass}
                     />
                   </div>
-                  <div>
+
+                  {/* Email — hidden when anonymous */}
+                  <div className={`transition-all duration-300 ${form.anonymous ? "opacity-40 pointer-events-none" : ""}`}>
                     <label className="text-xs font-semibold uppercase tracking-widest text-gray-400 block mb-1.5">
-                      Email
+                      Email {form.anonymous && <span className="normal-case tracking-normal font-normal">(hidden)</span>}
                     </label>
                     <input
-                      name="email" type="email" value={form.email} onChange={handleChange} required
-                      placeholder="your@email.com"
-                      className="w-full px-4 py-2.5 rounded-xl text-sm
-                                 border border-gray-200 dark:border-white/10
-                                 bg-white dark:bg-white/5 text-gray-900 dark:text-white
-                                 placeholder-gray-400 dark:placeholder-gray-500
-                                 focus:outline-none focus:border-purple-500 dark:focus:border-purple-400 transition-colors"
+                      name="email"
+                      type="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      required={!form.anonymous}
+                      disabled={form.anonymous}
+                      placeholder={form.anonymous ? "Not required" : "your@email.com"}
+                      className={inputClass}
                     />
                   </div>
                 </div>
 
+                {/* Subject */}
                 <div>
                   <label className="text-xs font-semibold uppercase tracking-widest text-gray-400 block mb-1.5">
                     Subject
@@ -205,14 +220,11 @@ export default function Contact() {
                   <input
                     name="subject" value={form.subject} onChange={handleChange} required
                     placeholder="What's this about?"
-                    className="w-full px-4 py-2.5 rounded-xl text-sm
-                               border border-gray-200 dark:border-white/10
-                               bg-white dark:bg-white/5 text-gray-900 dark:text-white
-                               placeholder-gray-400 dark:placeholder-gray-500
-                               focus:outline-none focus:border-purple-500 dark:focus:border-purple-400 transition-colors"
+                    className={inputClass}
                   />
                 </div>
 
+                {/* Message */}
                 <div>
                   <label className="text-xs font-semibold uppercase tracking-widest text-gray-400 block mb-1.5">
                     Message
@@ -220,17 +232,48 @@ export default function Contact() {
                   <textarea
                     name="message" value={form.message} onChange={handleChange} required rows={5}
                     placeholder="Tell me about your project, research collaboration, or just say hi!"
-                    className="w-full px-4 py-2.5 rounded-xl text-sm resize-none
-                               border border-gray-200 dark:border-white/10
-                               bg-white dark:bg-white/5 text-gray-900 dark:text-white
-                               placeholder-gray-400 dark:placeholder-gray-500
-                               focus:outline-none focus:border-purple-500 dark:focus:border-purple-400 transition-colors"
+                    className={`${inputClass} resize-none`}
                   />
                 </div>
 
+                {/* Anonymous checkbox */}
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <div className="relative flex-shrink-0 mt-0.5">
+                    <input
+                      type="checkbox"
+                      name="anonymous"
+                      checked={form.anonymous}
+                      onChange={handleChange}
+                      className="sr-only peer"
+                    />
+                    {/* Custom checkbox */}
+                    <div className="w-5 h-5 rounded border-2 border-gray-300 dark:border-white/20
+                                    peer-checked:bg-purple-600 peer-checked:border-purple-600
+                                    transition-all duration-200 flex items-center justify-center">
+                      {form.anonymous && (
+                        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-purple-500 transition-colors">
+                      Send anonymously
+                    </p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                      Your email won't be collected. You won't receive a reply.
+                    </p>
+                  </div>
+                </label>
+
+                {/* Status messages */}
                 {status === "success" && (
                   <div className="p-3 rounded-xl bg-green-500/10 border border-green-500/30 text-green-500 text-sm">
-                    ✓ Message sent! I'll get back to you soon.
+                    ✓ Message sent!
+                    {form.anonymous
+                      ? " Your anonymous message has been received."
+                      : " I'll get back to you soon — check your inbox for a confirmation."}
                   </div>
                 )}
                 {status === "error" && (
@@ -239,6 +282,7 @@ export default function Contact() {
                   </div>
                 )}
 
+                {/* Submit button */}
                 <button
                   type="submit"
                   disabled={status === "sending"}
@@ -259,12 +303,14 @@ export default function Contact() {
                   ) : (
                     <>
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                          d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                       </svg>
-                      Send Message
+                      {form.anonymous ? "Send Anonymously" : "Send Message"}
                     </>
                   )}
                 </button>
+
               </form>
             </div>
           </div>

@@ -6,8 +6,12 @@ import About from "./components/About";
 import Projects from "./components/Projects";
 import Blogs from "./components/Blogs";
 import Contact from "./components/Contact";
+import useTracker from "./hooks/useTracker";
 
 export default function App({ dark, setDark }) {
+  // Fire visitor tracking on every page navigation
+  useTracker();
+
   return (
     <div className={dark ? "dark" : ""}>
       <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white transition-colors duration-300">
