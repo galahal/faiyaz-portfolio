@@ -288,7 +288,7 @@ export default function Contact() {
                       onDragOver={(e) => e.preventDefault()}
                       onClick={() => fileInputRef.current?.click()}
                       className="relative border-2 border-dashed border-gray-200 dark:border-white/10
-                                 rounded-xl px-4 py-6 text-center cursor-pointer
+                                 rounded-xl px-4 py-3 text-center cursor-pointer
                                  hover:border-purple-500/50 hover:bg-purple-500/5
                                  transition-all duration-200 group"
                     >
