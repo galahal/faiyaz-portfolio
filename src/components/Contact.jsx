@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 const MAX_SIZE = 4 * 1024 * 1024; // 4MB
 
@@ -30,10 +31,11 @@ export default function Contact() {
   const [form, setForm] = useState({
     name: "", email: "", subject: "", message: "", anonymous: false,
   });
-  const [attachment, setAttachment] = useState(null); // { file, name, type, size, data }
+  const [attachment, setAttachment] = useState(null);
   const [fileError, setFileError]   = useState("");
   const [status, setStatus]         = useState(null);
   const fileInputRef = useRef(null);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -47,10 +49,7 @@ export default function Contact() {
   const handleFile = (file) => {
     setFileError("");
     if (!file) return;
-    if (file.size > MAX_SIZE) {
-      setFileError("File exceeds 4MB limit.");
-      return;
-    }
+    if (file.size > MAX_SIZE) { setFileError("File exceeds 4MB limit."); return; }
     if (!ALLOWED_TYPES.includes(file.type)) {
       setFileError("Unsupported file type. Allowed: images, PDF, Word, TXT, ZIP.");
       return;
@@ -59,12 +58,7 @@ export default function Contact() {
   };
 
   const handleFilePick = (e) => handleFile(e.target.files[0]);
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    handleFile(e.dataTransfer.files[0]);
-  };
-
+  const handleDrop = (e) => { e.preventDefault(); handleFile(e.dataTransfer.files[0]); };
   const removeAttachment = () => {
     setAttachment(null);
     setFileError("");
@@ -74,26 +68,17 @@ export default function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("sending");
-
     try {
-      // Convert file to base64 if attached
       let attachmentPayload = null;
       if (attachment) {
         const data = await fileToBase64(attachment.file);
-        attachmentPayload = {
-          name: attachment.name,
-          type: attachment.type,
-          size: attachment.size,
-          data,
-        };
+        attachmentPayload = { name: attachment.name, type: attachment.type, size: attachment.size, data };
       }
-
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...form, attachment: attachmentPayload }),
       });
-
       const json = await res.json();
       if (res.ok) {
         setStatus("success");
@@ -144,7 +129,6 @@ export default function Contact() {
     { label: "ACM DL",       href: "https://doi.org/10.1145/3772318.3791250" },
   ];
 
-  // File type icon
   const fileIcon = attachment
     ? attachment.type.startsWith("image/") ? "🖼️"
     : attachment.type === "application/pdf" ? "📄"
@@ -218,6 +202,22 @@ export default function Contact() {
                 ))}
               </div>
             </div>
+
+            {/* Hidden stats access — invisible dot, only you know it's there */}
+            <button
+              onClick={() => navigate("/stats")}
+              className="
+                fixed bottom-4 left-4
+                w-4 h-4
+                rounded-full
+                bg-gray-400/40 dark:bg-gray-500/40
+                hover:bg-purple-500
+                hover:scale-110
+                transition-all duration-300
+                z-50
+              "
+              aria-label="Hidden stats"
+            />
           </div>
 
           {/* Contact Form */}
@@ -275,20 +275,20 @@ export default function Contact() {
                   />
                 </div>
 
-                {/* File attachment */}
+                {/* File attachment — compact single-line */}
                 <div>
                   <label className="text-xs font-semibold uppercase tracking-widest text-gray-400 block mb-1.5">
-                    Attachment <span className="normal-case tracking-normal font-normal text-gray-400">(optional · max 4MB)</span>
+                    Attachment{" "}
+                    <span className="normal-case tracking-normal font-normal text-gray-400">(optional · max 4MB)</span>
                   </label>
 
                   {!attachment ? (
-                    // Drop zone
                     <div
                       onDrop={handleDrop}
                       onDragOver={(e) => e.preventDefault()}
                       onClick={() => fileInputRef.current?.click()}
-                      className="relative border-2 border-dashed border-gray-200 dark:border-white/10
-                                 rounded-xl px-4 py-3 text-center cursor-pointer
+                      className="flex items-center gap-2.5 px-4 py-2 rounded-xl cursor-pointer
+                                 border border-dashed border-gray-200 dark:border-white/10
                                  hover:border-purple-500/50 hover:bg-purple-500/5
                                  transition-all duration-200 group"
                     >
@@ -299,24 +299,20 @@ export default function Contact() {
                         accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.doc,.docx,.txt,.zip"
                         className="sr-only"
                       />
-                      <svg className="w-8 h-8 mx-auto mb-2 text-gray-300 dark:text-gray-600
-                                      group-hover:text-purple-400 transition-colors"
+                      <svg className="w-4 h-4 text-gray-400 group-hover:text-purple-400 flex-shrink-0 transition-colors"
                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
                           d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
                       </svg>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        <span className="text-purple-500 font-medium">Click to upload</span> or drag and drop
-                      </p>
-                      <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-                        Images, PDF, Word, TXT, ZIP — up to 4MB
-                      </p>
+                      <span className="text-sm text-gray-400 dark:text-gray-500 truncate">
+                        <span className="text-purple-500 font-medium">Click to attach</span>
+                        {" "}or drag and drop · Images, PDF, Word, TXT, ZIP
+                      </span>
                     </div>
                   ) : (
-                    // File preview
-                    <div className="flex items-center gap-3 px-4 py-3 rounded-xl
+                    <div className="flex items-center gap-3 px-4 py-2 rounded-xl
                                     border border-purple-500/30 bg-purple-500/5">
-                      <span className="text-2xl flex-shrink-0">{fileIcon}</span>
+                      <span className="text-base flex-shrink-0">{fileIcon}</span>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">
                           {attachment.name}
@@ -326,13 +322,13 @@ export default function Contact() {
                       <button
                         type="button"
                         onClick={removeAttachment}
-                        className="w-7 h-7 rounded-full bg-gray-200 dark:bg-white/10
+                        className="w-6 h-6 rounded-full bg-gray-200 dark:bg-white/10
                                    flex items-center justify-center text-gray-500
                                    hover:bg-red-100 hover:text-red-500
                                    dark:hover:bg-red-500/20 dark:hover:text-red-400
                                    transition-all flex-shrink-0"
                       >
-                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12"/>
                         </svg>
                       </button>
