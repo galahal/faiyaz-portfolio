@@ -5,7 +5,7 @@ export default function Blogs() {
       venue: "ACM CHI 2026",
       status: "Accepted & Published",
       period: "Sep 2025 – Apr 2026",
-      doi: "https://doi.org/10.1145/3772318.3791250",
+      doi: "http://hdl.handle.net/10361/26608",
       description:
         "An extended and publication-ready version of my thesis with refined framing, clearer methods, and strengthened contributions.",
       contributions: [
@@ -22,6 +22,8 @@ export default function Blogs() {
       status: "Completed",
       period: "Oct 2024 – Jun 2025",
       doi: null,
+      thesisLink: "/Resume_Faiyaz_Morshed_Khan.pdf", // replace with actual thesis PDF path if separate
+      civixImage: "/Projects/civix-ui.png",
       description:
         "Comprehensive mixed-methods research on Bangladesh's e-government platforms, developing standardized design solutions to improve digital accessibility and usability for citizens with limited technical skills.",
       contributions: [
@@ -122,20 +124,38 @@ export default function Blogs() {
                   ))}
                 </div>
 
-                {r.doi && (
-                  <a
-                    href={r.doi}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-purple-500 hover:underline"
-                  >
-                    Read Paper on ACM Digital Library
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                        d="M7 17L17 7M17 7H7M17 7v10" />
-                    </svg>
-                  </a>
-                )}
+                <div className="flex flex-col gap-3"> 
+                  <div className="flex flex-wrap gap-3">
+                    {r.doi && (
+                      <a
+                        href={r.doi}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-purple-500 hover:underline"
+                      >
+                        Read Paper on ACM Digital Library
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                            d="M7 17L17 7M17 7H7M17 7v10" />
+                        </svg>
+                      </a>
+                    )}
+                    {r.thesisLink && (
+                      <a
+                        href={r.thesisLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-purple-500 hover:underline"
+                      >
+                        View Thesis
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                            d="M7 17L17 7M17 7H7M17 7v10" />
+                        </svg>
+                      </a>
+                    )}
+                  </div>
+                </div>
               </div>
             ))}
           </div>
